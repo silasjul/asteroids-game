@@ -1,6 +1,5 @@
 package com.silas.asteroids.main;
 
-import com.silas.asteroids.entity.Entity;
 import com.silas.asteroids.player.Player;
 
 import javafx.animation.KeyFrame;
