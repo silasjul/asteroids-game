@@ -35,9 +35,9 @@ public class World {
             if (layer.getOffsetY() >= height*scale) layer.setOffsetY(0);
         }
 
+        // Random planet fly-by
         planet.move();
         if (planet.getOffsetY() > height*scale) {
-            // reset planet with a random xOffset and size
             planet.setOffsetX(Math.random()*(width*scale-planet.getWidth()*planetScale));
             planetScale = (int) (Math.random() * 10);
             planet.setOffsetY(-planet.getHeight()*planetScale-800);
