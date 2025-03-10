@@ -9,23 +9,20 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 
 public class App extends Application {
-    private World world = new World();
-    private int width = world.getWidth(), height = world.getHeight();
-    private Player player = new Player(width/2, height/2);
+    private final World world = new World();
+    private final int width = world.getWidth();
+    private final int height = world.getHeight();
+    private final Player player = new Player(width/2, height/2);
     private final Canvas canvas = new Canvas(width, height);
-    private GraphicsContext gc = canvas.getGraphicsContext2D();
+    private final GraphicsContext gc = canvas.getGraphicsContext2D();
     private final StackPane root = new StackPane(canvas);
     private final Scene scene = new Scene(root, width, height);
     private final Timeline tl = new Timeline();
@@ -35,7 +32,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
-        KeyFrame kf = new KeyFrame(Duration.millis( 1000 / 144), event -> render()); // 144 fps
+        KeyFrame kf = new KeyFrame(Duration.millis( (double) 1000 / 144), event -> render()); // 144 fps
         tl.getKeyFrames().add(kf);
         tl.setCycleCount(Timeline.INDEFINITE);
         stage.setScene(scene);
