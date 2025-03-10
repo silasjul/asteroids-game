@@ -6,7 +6,12 @@ package com.silas.asteroids.entity;
  */
 public class Entity
 {
-    public static void helloEntity() {
-        System.out.println("hello from entity");
+    protected double x;
+    protected double y;
+
+    public Entity(double x, double y)
+    {
+        this.x = x;
+        this.y = y;
     }
 }

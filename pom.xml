@@ -20,6 +20,7 @@
     <module>Player</module>
     <module>Entity</module>
     <module>Sprite</module>
+      <module>Bullet</module>
   </modules>
 
   <build>
