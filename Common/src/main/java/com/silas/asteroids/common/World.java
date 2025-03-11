@@ -1,4 +1,4 @@
-package com.silas.asteroids.main;
+package com.silas.asteroids.common;
 
 import com.silas.asteroids.entity.Entity;
 import com.silas.asteroids.sprite.Parallax;
@@ -12,11 +12,11 @@ public class World {
     private int width = 640, height = 360;
     private int scale = 2;
     private int planetScale = 5;
-    private Parallax planet = new Parallax("/background/planet.png", 96, 96, 1);
+    private Parallax planet = new Parallax("/background/planet.png", 96, 96, 1, scale);
     private Parallax[] bg = new Parallax[] {
-            new Parallax("/background/void.png", width, height, 0.2),
-            new Parallax("/background/stars.png", width, height, 0.35),
-            new Parallax("/background/bigStarts.png", width, height, 0.5),
+            new Parallax("/background/void.png", width, height, 0.2, scale),
+            new Parallax("/background/stars.png", width, height, 0.35, scale),
+            new Parallax("/background/bigStarts.png", width, height, 0.5, scale),
     };
 
     public World() {

@@ -1,4 +1,4 @@
-package com.silas.asteroids.entity;
+package com.silas.asteroids.common;
 
 /**
  * Hello world!

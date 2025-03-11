@@ -8,9 +8,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <maven.compiler.source>1.9</maven.compiler.source>
-    <maven.compiler.target>1.9</maven.compiler.target>
-    <maven.compiler.release>17</maven.compiler.release>
+    <maven.compiler.release>23</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -18,13 +16,31 @@
   <modules>
     <module>App</module>
     <module>Player</module>
-    <module>Entity</module>
     <module>Sprite</module>
-      <module>Bullet</module>
+    <module>Bullet</module>
+    <module>Common</module>
   </modules>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <release>23</release>
+        </configuration>
+      </plugin>
+
       <!-- mvn exec:java -pl App -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -46,13 +62,4 @@
       </plugin>
     </plugins>
   </build>
-
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
 </project>

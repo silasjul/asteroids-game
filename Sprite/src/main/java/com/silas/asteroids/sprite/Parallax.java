@@ -6,8 +6,8 @@ public class Parallax extends Sprite {
     private double offsetY = 0;
     private double offsetX = 0;
 
-    public Parallax(String imagePath, int width, int height, double speed) {
-        super(imagePath, width, height);
+    public Parallax(String imagePath, int width, int height, double speed, double scale) {
+        super(imagePath, width, height, scale);
         this.speed = speed;
     }
 

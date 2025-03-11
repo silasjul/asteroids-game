@@ -1,16 +1,20 @@
 package com.silas.asteroids.main;
 
+import com.silas.asteroids.common.World;
 import com.silas.asteroids.player.Player;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,9 +29,15 @@ public class App extends Application {
     private final StackPane root = new StackPane(canvas);
     private final Scene scene = new Scene(root, width, height);
     private final Timeline tl = new Timeline();
-    private final Set<String> keyMap = new HashSet<>();
 
+    private final Set<String> keyMap = new HashSet<>();
+    private final HashMap<String, Double> mousePos = new HashMap<>();
+    private boolean mousePressed = false;
     private int frame = 0;
+
+    public static void main(String[] args) {
+        launch();
+    }
 
     @Override
     public void start(Stage stage) {
@@ -39,6 +49,7 @@ public class App extends Application {
         stage.setResizable(false);
         stage.show();
 
+        scene.setCursor(Cursor.CROSSHAIR);
 
         scene.setOnKeyPressed(keyEvent -> {
             keyMap.add(keyEvent.getCode().toString());
@@ -47,6 +58,19 @@ public class App extends Application {
         scene.setOnKeyReleased(keyEvent -> {
             keyMap.remove(keyEvent.getCode().toString());
         });
+
+        scene.setOnMouseMoved(mouseEvent -> {
+            mousePos.put("X", mouseEvent.getX());
+            mousePos.put("Y", mouseEvent.getY());
+        });
+
+        scene.setOnMouseDragged(mouseEvent -> {
+            mousePos.put("X", mouseEvent.getX());
+            mousePos.put("Y", mouseEvent.getY());
+        });
+
+        scene.setOnMousePressed(_ -> mousePressed=true);
+        scene.setOnMouseReleased(_ -> mousePressed=false);
 
         // instantiate entities
 
@@ -61,7 +85,7 @@ public class App extends Application {
 
     private void update() {
         world.moveBackground();
-        player.move(keyMap);
+        player.update(mousePos.get("X"), mousePos.get("Y"), keyMap);
     }
 
     private void draw() {
@@ -69,8 +93,12 @@ public class App extends Application {
         player.draw(gc);
     }
 
-    public static void main(String[] args) {
-        launch();
+    public boolean isMousePressed() {
+        return mousePressed;
+    }
+
+    public HashMap<String, Double> getMousePos() {
+        return mousePos;
     }
 
 }

@@ -7,16 +7,29 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.silas.asteroids.entity</groupId>
-    <artifactId>Entity</artifactId>
+    <groupId>com.silas.asteroids.common</groupId>
+    <artifactId>Common</artifactId>
     <packaging>jar</packaging>
 
-    <name>Entity</name>
+    <name>Common</name>
+    <url>http://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.silas.asteroids.entity</groupId>
+            <artifactId>Entity</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.silas.asteroids.sprite</groupId>
+            <artifactId>Sprite</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>
