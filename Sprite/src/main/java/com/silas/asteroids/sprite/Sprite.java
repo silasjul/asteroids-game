@@ -18,19 +18,26 @@ public class Sprite
     private int height;
     private double scale;
     private int amount = 0;
+    private double rotationRad;
     private int current = 0;
 
-    public Sprite(String imagePath, int width, int height, double scale) {
+    public Sprite(String imagePath, int width, int height, double scale, double rotationRad) {
         this.width = width;
         this.height = height;
         this.scale = scale;
+        this.rotationRad = rotationRad;
 
         try {
             spriteSheet = ImageIO.read(this.getClass().getResourceAsStream(imagePath));
         } catch (IOException e) {
-            System.out.println("image is null");
+            throw new RuntimeException("image is null");
         }
+
         createSubImages();
+    }
+
+    public Sprite(String imagePath, int width, int height, double scale) {
+        this(imagePath, width, height, scale, 0);
     }
 
     public void createSubImages() {
@@ -40,25 +47,24 @@ public class Sprite
 
         for (int i = 0; i < amount; i++) {
             BufferedImage newImage = spriteSheet.getSubimage(i*width, 0, width, height);
+
+            if (rotationRad != 0) {
+                newImage = scaleImage(newImage, this.scale);
+                newImage = rotateImage(newImage, rotationRad);
+            }
+
             sprites[i] = newImage;
+
             fxSprites[i] = SwingFXUtils.toFXImage(newImage, null); // Converts BufferedImage to a JavaFX Image
         }
     }
 
-    public Image[] getFxSprites() {return fxSprites;}
-
     public Image getImage(int i) {
         return fxSprites[i];
     }
+    public Image getCurrentImage() {return getImage(current);}
 
-    public Image getImage(int i, double rotation) {
-        BufferedImage selectedSprite = sprites[i];
-        selectedSprite = scaleImage(selectedSprite);
-        selectedSprite = rotateImage(selectedSprite, rotation);
-        return SwingFXUtils.toFXImage(selectedSprite, null);
-    }
-
-    public BufferedImage scaleImage(BufferedImage img) {
+    public BufferedImage scaleImage(BufferedImage img, double scale) {
         int w = (int) (img.getWidth()*scale);
         int h = (int) (img.getHeight()*scale);
 
@@ -84,7 +90,7 @@ public class Sprite
 
         // Apply transformation
         AffineTransform at = new AffineTransform();
-        at.rotate(angle, w / 2.0, h / 2.0);  // Rotate around center
+        at.rotate(angle + Math.PI/2, w / 2.0, h / 2.0);  // Rotate around center (correcting rotation with PI)
         g2d.setTransform(at);
 
         // Draw the original image onto the rotated transformation
@@ -96,7 +102,6 @@ public class Sprite
 
     public int getWidth() {return width;}
     public int getHeight() {return height;}
-    public int getCurrent() {return current;}
     public void next() {
         current++;
         if (current >= amount) {current = 0;}

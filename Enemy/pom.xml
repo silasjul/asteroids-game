@@ -7,11 +7,11 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.silas.asteroids.bullet</groupId>
-    <artifactId>Bullet</artifactId>
+    <groupId>com.silas.asteroids.enemy</groupId>
+    <artifactId>Enemy</artifactId>
     <packaging>jar</packaging>
 
-    <name>Bullet</name>
+    <name>Enemy</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -19,12 +19,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.silas.asteroids.sprite</groupId>
-            <artifactId>Sprite</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
         <dependency>
             <groupId>com.silas.asteroids.common</groupId>
             <artifactId>Common</artifactId>

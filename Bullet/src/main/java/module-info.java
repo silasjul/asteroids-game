@@ -1,4 +1,6 @@
 module Bullet {
-    requires Entity;
+    requires Common;
+    requires Sprite;
+    requires javafx.graphics;
     exports com.silas.asteroids.bullet;
 }

@@ -1,65 +1,88 @@
 package com.silas.asteroids.player;
 
+import com.silas.asteroids.bullet.Bullet;
+import com.silas.asteroids.common.data.GameData;
+import com.silas.asteroids.common.data.World;
+import com.silas.asteroids.common.entity.Character;
 import com.silas.asteroids.sprite.Sprite;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
-import java.util.Set;
+import java.util.HashMap;
 
+public class Player extends Character {
+    private int xp = 0;
 
-public class Player
-{
-    private double x;
-    private double y;
-    private final int width = 48;
-    private final int height = 48;
-    private double scale = 2.5;
-    private double speed = 2;
-    private double angle = 0;
-    private int hp = 100;
+    private enum Condition {
+        PERFECT,
+        GOOD,
+        DAMAGED,
+        SHIT
+    }
 
-    Sprite[] sprites = new Sprite[] {
-            new Sprite("/player/pl100.png", width, height, scale),
-            new Sprite("/player/pl75.png", width, height, scale),
-            new Sprite("/player/pl50.png", width, height, scale),
-            new Sprite("/player/pl25.png", width, height, scale),
-    };
+    HashMap<Condition, String> shipMap = new HashMap<>();
 
-    public Player(double x, double y)
+    public Player(double sceenWidth, double sceenHeight)
     {
-        this.x = x;
-        this.y = y;
+        super(48, 48, 2.5, 0, 0, 100, 10, 15);
+
+        // Spawn position
+        this.x = sceenWidth / 2. - this.width / 2.;
+        this.y = sceenHeight / 1.8;
+
+
+        // Ships
+        shipMap.put(Condition.PERFECT, "/player/pl100.png");
+        shipMap.put(Condition.GOOD, "/player/pl75.png");
+        shipMap.put(Condition.DAMAGED, "/player/pl50.png");
+        shipMap.put(Condition.SHIT, "/player/pl25.png");
     }
 
-    public void update(double mouseX, double mouseY, Set<String> keyMap) {
-        calcAngle(mouseX, mouseY);
-        move(keyMap);
+    @Override
+    public void update(World world, GameData gameData) {
+        this.angle = calcAngle(gameData.getMousePosX(), gameData.getMousePosY());
+        move(gameData);
+
+        // Bullet logic
+        double fireDelay = 1000. / this.fireRate;
+        if (gameData.getMousePressed() && System.currentTimeMillis() - lastFire > fireDelay) {
+            fire(world);
+            lastFire = System.currentTimeMillis();
+        }
     }
 
+    @Override
+    protected void fire(World world) {
+        Bullet bullet = new Bullet(this.x, this.y, this.bulletSpeed, this.angle, Bullet.Type.ZAP);
+        world.addEntity(bullet);
+    }
+
+    @Override
     public Image getImg() {
-        if (hp < 25) return sprites[3].getImage(0);
-        if (hp < 50) return sprites[2].getImage(0);
-        if (hp < 75) return sprites[1].getImage(0);
-        return sprites[0].getImage(0, -this.angle+Math.PI); // "-" rotates correct way. pi flips image
+        Condition c;
+        if (hp >= 75) c = Condition.PERFECT;
+        else if (hp >= 50) c = Condition.GOOD;
+        else if (hp >= 25) c = Condition.DAMAGED;
+        else c = Condition.SHIT;
+
+        Sprite sprite = new Sprite (this.shipMap.get(c), this.width, this.height, this.scale, this.angle);
+        return sprite.getImage(0);
     }
 
-    public void move(Set<String> keyMap)
+    @Override
+    public void move(GameData gameData)
     {
         // x-axis
-        if (keyMap.contains("A")) x -= speed;
-        if (keyMap.contains("D")) x += speed;
+        if (gameData.isKeyPressed("A")) x -= speed;
+        if (gameData.isKeyPressed("D")) x += speed;
 
         // y-axis
-        if (keyMap.contains("W")) y -= speed;
-        if (keyMap.contains("S")) y += speed;
+        if (gameData.isKeyPressed("W")) y -= speed;
+        if (gameData.isKeyPressed("S")) y += speed;
     }
 
-    public void calcAngle(double x, double y) {
-        this.angle = Math.atan2(x - this.x, y - this.y);
-    }
-
-    public void draw(GraphicsContext gc) {
-        gc.drawImage(getImg(), x-width*scale/2, y-height*scale/2, width*scale, height*scale);
+    @Override
+    public void draw(GraphicsContext gc, GameData gameData) {
+        gc.drawImage(getImg(), x-this.width*scale/2, y-this.height*scale/2, width*scale, height*scale);
     }
 }

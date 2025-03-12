@@ -1,6 +1,7 @@
 module Common {
-    requires Entity;
     requires Sprite;
     requires javafx.graphics;
-    exports com.silas.asteroids.common;
+    requires java.desktop;
+    exports com.silas.asteroids.common.entity;
+    exports com.silas.asteroids.common.data;
 }
