@@ -45,7 +45,7 @@ public class Sprite {
     }
 
     public void createSubImages() {
-        amount = spriteSheet.getWidth() / width;
+        this.amount = spriteSheet.getWidth() / width;
         fxSprites = new Image[amount];
         sprites = new BufferedImage[amount];
 
@@ -106,6 +106,8 @@ public class Sprite {
 
     public int getWidth() {return width;}
     public int getHeight() {return height;}
+    public int getAmount()  {return this.fxSprites.length;}
+
     public void next() {
         current++;
         if (current >= amount) {

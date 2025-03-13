@@ -16,7 +16,6 @@ import javafx.scene.image.Image;
  */
 public class Melee extends Character
 {
-    int attackRange = 10;
     protected Player player;
     protected Sprite sprite;
     protected Sprite deathAnimation;
@@ -37,13 +36,13 @@ public class Melee extends Character
             return;
         }
 
-        this.move(gameData);
+        this.move(gameData, world);
 
         // Attack player on collision
         if (isLoaded() && world.isColliding(this, player)) this.fire(world, gameData);
 
         // Hit by player bullet
-        for (Entity bullet : world.getPlayerBullets()) {
+        for (Entity bullet : world.getEntities(EntityType.PLAYERBULLET)) {
             if (world.isColliding(this, bullet)) {
                 world.removeEntity(bullet);
                 this.takeDmg(player.getDmg());
@@ -57,10 +56,37 @@ public class Melee extends Character
         return sprite.getCurrentImage();}
 
     @Override
-    protected void move(GameData gameData) {
+    protected void move(GameData gameData, World world) {
         double angleRad = calcAngle(player.getCenterX(), player.getCenterY());
-        this.x = this.x + speed * Math.cos(angleRad);
-        this.y = this.y + speed * Math.sin(angleRad);
+        double moveX = speed * Math.cos(angleRad);
+        double moveY = speed * Math.sin(angleRad);
+        double[] force = calcSeperationForce(world);
+
+
+        this.x += moveX + force[0];
+        this.y += moveY + force[1];
+    }
+
+    protected double[] calcSeperationForce(World world) {
+        // Separation force to prevent enemies from stacking
+        double separationX = 0;
+        double separationY = 0;
+        double minDistance = this.width-10;
+
+        for (Entity other : world.getEntities(EntityType.ENEMY)) {
+            if (other == this) continue;
+
+            double dx = this.x - other.getX();
+            double dy = this.y - other.getY();
+            double distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < minDistance && distance > 0) {
+                // If an enemy gets too close we apply the force
+                separationX += dx / distance;
+                separationY += dy / distance;
+            }
+        }
+        return new double[] {separationX, separationY};
     }
 
     @Override

@@ -33,7 +33,7 @@ public abstract class Character extends Entity
 
     protected abstract Image getImg();
 
-    protected abstract void move(GameData gameData);
+    protected abstract void move(GameData gameData, World world);
 
     protected abstract void fire(World world, GameData gameData);
 

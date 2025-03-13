@@ -6,7 +6,7 @@ import com.silas.asteroids.player.Player;
 
 public class EnemyFactory {
     int maxEnemies = 10;
-    int spawnRate = 5;
+    double spawnRate = .5;
     double lastSpawnTime = 0;
     Player player;
 
@@ -20,7 +20,8 @@ public class EnemyFactory {
 
     public void spawn(World world, GameData gameData) {
         if (getLastSpawnSeconds() >= spawnRate && world.getEnemiesAmount() < this.maxEnemies) {
-            spawnEnemy(Type.MELEE, getSpawnPosX(world), getSpawnPosY(world), world);
+            double[] spawnPos = getSpawnPos(world);
+            spawnEnemy(Type.MELEE, spawnPos[0], spawnPos[1], world);
             lastSpawnTime = System.currentTimeMillis() / 1000.;
         }
     }
@@ -35,6 +36,35 @@ public class EnemyFactory {
         return (int) (System.currentTimeMillis() / 1000. - this.lastSpawnTime);
     }
 
-    private double getSpawnPosX(World world) {return Math.random() * (world.getWidth() - 200) + 200;}
-    private double getSpawnPosY(World world) {return Math.random() * (world.getHeight() - 200) + 200;}
+    private double[] getSpawnPos(World world) {
+        double[] spawnPos = new double[2];
+
+        double sideToSpawn = Math.random();
+
+        // spawn topside
+        if (sideToSpawn <= 0.25) {
+            spawnPos[0] = Math.random() * world.getWidth();
+            spawnPos[1] = -50;
+        }
+
+        // spawn bottom
+        else if (sideToSpawn <= 0.50) {
+            spawnPos[0] = Math.random() * world.getWidth();
+            spawnPos[1] = world.getHeight() + 10;
+        }
+
+        // spawn right
+        else if (sideToSpawn <= 0.75) {
+            spawnPos[0] = world.getWidth() + 10;
+            spawnPos[1] = Math.random() * world.getHeight();
+        }
+
+        // spawn left
+        else {
+            spawnPos[0] = -50;
+            spawnPos[1] = Math.random() * world.getHeight();
+        }
+
+        return spawnPos;
+    }
 }

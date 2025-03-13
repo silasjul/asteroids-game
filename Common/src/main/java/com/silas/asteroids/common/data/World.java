@@ -94,12 +94,12 @@ public class World {
         return enemyCount;
     }
 
-    public ArrayList<Entity> getPlayerBullets() {
-        ArrayList<Entity> bullets = new ArrayList<>();
+    public ArrayList<Entity> getEntities(EntityType type) {
+        ArrayList<Entity> e = new ArrayList<>();
         for (Entity entity : entities) {
-            if (entity.getType() == EntityType.PLAYERBULLET) bullets.add(entity);
+            if (entity.getType() == type) e.add(entity);
         }
-        return bullets;
+        return e;
     }
 
     public boolean isColliding(Entity a, Entity b) {
