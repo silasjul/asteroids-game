@@ -7,4 +7,5 @@ import javafx.scene.canvas.GraphicsContext;
 public interface Entity {
     public void draw(GraphicsContext gc, GameData gameData);
     public void update(World world, GameData gameData);
+    public EntityType getType();
 }

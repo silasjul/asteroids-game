@@ -2,6 +2,7 @@ package com.silas.asteroids.main;
 
 import com.silas.asteroids.common.data.GameData;
 import com.silas.asteroids.common.data.World;
+import com.silas.asteroids.enemy.EnemyFactory;
 import com.silas.asteroids.player.Player;
 
 import javafx.animation.KeyFrame;
@@ -24,6 +25,7 @@ public class App extends Application {
     private final int height = world.getHeight();
 
     private final Player player = new Player(width, height);
+    private final EnemyFactory enemyFactory = new EnemyFactory(player);
 
     private final Canvas canvas = new Canvas(width, height);
     private final GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -63,8 +65,6 @@ public class App extends Application {
         scene.setOnMousePressed(_ -> gameData.setMousePressed(true));
         scene.setOnMouseReleased(_ -> gameData.setMousePressed(false));
 
-        // instantiate entities
-
         tl.play();
     }
 
@@ -78,6 +78,7 @@ public class App extends Application {
         world.moveBackground();
         player.update(world, gameData);
         world.updateEntities(gameData);
+        enemyFactory.spawn(world, gameData);
     }
 
     private void draw() {

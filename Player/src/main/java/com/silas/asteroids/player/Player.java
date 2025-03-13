@@ -4,6 +4,7 @@ import com.silas.asteroids.bullet.Bullet;
 import com.silas.asteroids.common.data.GameData;
 import com.silas.asteroids.common.data.World;
 import com.silas.asteroids.common.entity.Character;
+import com.silas.asteroids.common.entity.EntityType;
 import com.silas.asteroids.sprite.Sprite;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -22,13 +23,13 @@ public class Player extends Character {
 
     HashMap<Condition, String> shipMap = new HashMap<>();
 
-    public Player(double sceenWidth, double sceenHeight)
+    public Player(double screenWidth, double screenHeight)
     {
-        super(48, 48, 2.5, 0, 0, 100, 10, 15);
+        super(48, 48, 2.5, 0, 0, 48, 48, 100, 2,5, 5);
 
         // Spawn position
-        this.x = sceenWidth / 2. - this.width / 2.;
-        this.y = sceenHeight / 1.8;
+        this.x = screenWidth / 2. - this.width / 2.;
+        this.y = screenHeight / 1.8;
 
 
         // Ships
@@ -44,16 +45,20 @@ public class Player extends Character {
         move(gameData);
 
         // Bullet logic
-        double fireDelay = 1000. / this.fireRate;
-        if (gameData.getMousePressed() && System.currentTimeMillis() - lastFire > fireDelay) {
-            fire(world);
+        if (gameData.getMousePressed() && System.currentTimeMillis() - lastFire > getFireDelay()) {
+            fire(world, gameData);
             lastFire = System.currentTimeMillis();
         }
     }
 
     @Override
-    protected void fire(World world) {
-        Bullet bullet = new Bullet(this.x, this.y, this.bulletSpeed, this.angle, Bullet.Type.ZAP);
+    public EntityType getType() {
+        return EntityType.PLAYER;
+    }
+
+    @Override
+    protected void fire(World world, GameData gameData) {
+        Bullet bullet = new Bullet(this.x, this.y, this.bulletSpeed, this.angle, Bullet.Type.BULLET, EntityType.PLAYER);
         world.addEntity(bullet);
     }
 
@@ -65,7 +70,7 @@ public class Player extends Character {
         else if (hp >= 25) c = Condition.DAMAGED;
         else c = Condition.SHIT;
 
-        Sprite sprite = new Sprite (this.shipMap.get(c), this.width, this.height, this.scale, this.angle);
+        Sprite sprite = new Sprite (this.shipMap.get(c), this.width, this.height, this.scale, this.angle + Math.PI/2);
         return sprite.getImage(0);
     }
 
@@ -84,5 +89,11 @@ public class Player extends Character {
     @Override
     public void draw(GraphicsContext gc, GameData gameData) {
         gc.drawImage(getImg(), x-this.width*scale/2, y-this.height*scale/2, width*scale, height*scale);
+
+        if (gameData.isTesting()) drawCenterCollider(gc);
+    }
+
+    public void takeDmg(int dmg) {
+        this.hp -= dmg;
     }
 }

@@ -9,8 +9,11 @@ import java.io.IOException;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 
-public class Sprite
-{
+/**
+ * Takes a spritesheet and divides it into images and store them in a list
+ *
+ */
+public class Sprite {
     private BufferedImage spriteSheet;
     private BufferedImage[] sprites;
     private Image[] fxSprites;
@@ -90,7 +93,7 @@ public class Sprite
 
         // Apply transformation
         AffineTransform at = new AffineTransform();
-        at.rotate(angle + Math.PI/2, w / 2.0, h / 2.0);  // Rotate around center (correcting rotation with PI)
+        at.rotate(angle, w / 2.0, h / 2.0);  // Rotate around center (correcting rotation with PI)
         g2d.setTransform(at);
 
         // Draw the original image onto the rotated transformation

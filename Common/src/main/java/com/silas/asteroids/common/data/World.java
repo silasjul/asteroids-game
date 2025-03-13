@@ -1,12 +1,18 @@
 package com.silas.asteroids.common.data;
 
+import com.silas.asteroids.common.entity.Character;
 import com.silas.asteroids.common.entity.Entity;
+import com.silas.asteroids.common.entity.EntityType;
 import com.silas.asteroids.sprite.Parallax;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
 
+/**
+ * Contains entities, background and window dimensions
+ *
+ */
 public class World {
     private final ArrayList<Entity> entities = new ArrayList<>();
     private final ArrayList<Entity> toRemove = new ArrayList<>();
@@ -55,7 +61,7 @@ public class World {
             planet.setOffsetX(Math.random()*(width*scale-planet.getWidth()*planetScale));
             planetScale = (int) (Math.random() * 10);
             planet.setOffsetY(-planet.getHeight()*planetScale-800);
-        };
+        }
     }
 
     public void drawBackground(GraphicsContext gc, GameData gameData) {
@@ -75,10 +81,24 @@ public class World {
 
 
     public void addEntity(Entity entity) {
-        entities.add(entity);
-    }
+        entities.add(entity);}
     public void removeEntity(Entity entity) {toRemove.add(entity);}
 
     public int getWidth() {return width*scale;}
     public int getHeight() {return height*scale;}
+    public int getEnemiesAmount() {
+        int enemyCount = 0;
+        for (Entity entity : entities) {
+            if (entity instanceof Character) enemyCount++;
+        }
+        return enemyCount;
+    }
+
+    public ArrayList<Entity> getBullets() {
+        ArrayList<Entity> bullets = new ArrayList<>();
+        for (Entity entity : entities) {
+            if (entity.getType() == EntityType.BULLET) bullets.add(entity);
+        }
+        return entities;
+    }
 }

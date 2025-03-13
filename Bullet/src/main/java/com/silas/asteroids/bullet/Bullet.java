@@ -3,6 +3,7 @@ package com.silas.asteroids.bullet;
 import com.silas.asteroids.common.data.GameData;
 import com.silas.asteroids.common.entity.Entity;
 import com.silas.asteroids.common.data.World;
+import com.silas.asteroids.common.entity.EntityType;
 import com.silas.asteroids.sprite.Sprite;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -14,6 +15,8 @@ public class Bullet implements Entity
     double speed;
     double angleRad;
     Sprite sprite;
+    int width = 32;
+    int height = 32;
 
     public enum Type {
         ZAP,
@@ -22,18 +25,19 @@ public class Bullet implements Entity
         BALL
     }
 
-    public Bullet(double x, double y, double speed, double angleRad, Type type) {
+    public Bullet(double x, double y, double speed, double angleRad, Type type, EntityType firedBy) {
         this.x = x;
         this.y = y;
         this.speed = speed;
         this.angleRad = angleRad;
 
         // Different bullets
+        double imgRotation = angleRad + Math.PI/2;
         switch (type) {
-            case ZAP -> this.sprite = new Sprite ("/player/projectiles/zap.png", 32, 32, 1, this.angleRad);
-            case BULLET -> this.sprite = new Sprite ("/player/projectiles/bullet.png", 32, 32, 1.5, this.angleRad);
-            case ROCKET -> this.sprite = new Sprite ("/player/projectiles/rocket.png", 32, 32, 1, this.angleRad);
-            case BALL -> new Sprite ("/player/projectiles/ball.png", 32, 32, 1, this.angleRad);
+            case ZAP -> this.sprite = new Sprite ("/player/projectiles/zap.png", height, width, 1, imgRotation);
+            case BULLET -> this.sprite = new Sprite ("/player/projectiles/bullet.png", height, width, 1.5, imgRotation);
+            case ROCKET -> this.sprite = new Sprite ("/player/projectiles/rocket.png", height, width, 1, imgRotation);
+            case BALL -> new Sprite ("/player/projectiles/ball.png", height, width, 1, imgRotation);
         }
     }
 
@@ -56,6 +60,11 @@ public class Bullet implements Entity
             return;
         }
         move();
+    }
+
+    @Override
+    public EntityType getType() {
+        return EntityType.BULLET;
     }
 
     public boolean isOutOfScreen(int screenWidth, int screenHeight) {

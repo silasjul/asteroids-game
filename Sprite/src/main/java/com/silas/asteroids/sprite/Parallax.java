@@ -1,5 +1,9 @@
 package com.silas.asteroids.sprite;
 
+/**
+ * Used to create the background where the images are chopped into layers and moved at different speeds creating a cool effect
+ *
+ */
 public class Parallax extends Sprite {
 
     private final double speed;
