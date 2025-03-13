@@ -19,7 +19,7 @@ import javafx.util.Duration;
 
 public class App extends Application {
     private final World world = new World();
-    private final GameData gameData = new GameData();
+    private final GameData gameData = new GameData(false); // draw colliders and centers
 
     private final int width = world.getWidth();
     private final int height = world.getHeight();

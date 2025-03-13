@@ -26,7 +26,6 @@ public class EnemyFactory {
     }
 
     private void spawnEnemy(Type type, double x, double y, World world) {
-        System.out.println(x +" "+ y);
         switch (type) {
             case MELEE -> world.addEntity(new Melee(x, y, player));
         }

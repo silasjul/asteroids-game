@@ -23,6 +23,7 @@ public class Sprite {
     private int amount = 0;
     private double rotationRad;
     private int current = 0;
+    private int animationCount = 0;
 
     public Sprite(String imagePath, int width, int height, double scale, double rotationRad) {
         this.width = width;
@@ -107,7 +108,11 @@ public class Sprite {
     public int getHeight() {return height;}
     public void next() {
         current++;
-        if (current >= amount) {current = 0;}
+        if (current >= amount) {
+            current = 0;
+            animationCount++;
+        }
     }
+    public int getAnimationCount() {return animationCount;}
 
 }

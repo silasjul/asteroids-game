@@ -25,7 +25,7 @@ public class Player extends Character {
 
     public Player(double screenWidth, double screenHeight)
     {
-        super(48, 48, 2.5, 0, 0, 48, 48, 100, 2,5, 5);
+        super(0,0, 48, 48, 40,40, EntityType.PLAYER, 2.5, 100,10, 2,5, 5);
 
         // Spawn position
         this.x = screenWidth / 2. - this.width / 2.;
@@ -45,21 +45,16 @@ public class Player extends Character {
         move(gameData);
 
         // Bullet logic
-        if (gameData.getMousePressed() && System.currentTimeMillis() - lastFire > getFireDelay()) {
+        if (gameData.getMousePressed() && isLoaded()) {
             fire(world, gameData);
-            lastFire = System.currentTimeMillis();
         }
     }
 
     @Override
-    public EntityType getType() {
-        return EntityType.PLAYER;
-    }
-
-    @Override
     protected void fire(World world, GameData gameData) {
-        Bullet bullet = new Bullet(this.x, this.y, this.bulletSpeed, this.angle, Bullet.Type.BULLET, EntityType.PLAYER);
+        Bullet bullet = new Bullet(this.x, this.y, this.bulletSpeed, this.angle, Bullet.Type.BULLET, EntityType.PLAYERBULLET);
         world.addEntity(bullet);
+        lastFire = System.currentTimeMillis();
     }
 
     @Override
@@ -93,7 +88,8 @@ public class Player extends Character {
         if (gameData.isTesting()) drawCenterCollider(gc);
     }
 
-    public void takeDmg(int dmg) {
-        this.hp -= dmg;
+    @Override
+    public void die() {
+
     }
 }

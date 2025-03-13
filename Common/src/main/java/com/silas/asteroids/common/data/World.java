@@ -66,7 +66,7 @@ public class World {
 
     public void drawBackground(GraphicsContext gc, GameData gameData) {
         for (Parallax parallax : bg) {
-            if (gameData.getFrame() % 14 == 0) { // slow down animation
+            if (gameData.isAnimationFrame()) {
                 parallax.next(); // point to next image
                 planet.next();
             }
@@ -94,11 +94,18 @@ public class World {
         return enemyCount;
     }
 
-    public ArrayList<Entity> getBullets() {
+    public ArrayList<Entity> getPlayerBullets() {
         ArrayList<Entity> bullets = new ArrayList<>();
         for (Entity entity : entities) {
-            if (entity.getType() == EntityType.BULLET) bullets.add(entity);
+            if (entity.getType() == EntityType.PLAYERBULLET) bullets.add(entity);
         }
-        return entities;
+        return bullets;
+    }
+
+    public boolean isColliding(Entity a, Entity b) {
+        return a.getX() < b.getX() + b.getColliderWidth() &&
+                a.getX() + a.getColliderWidth() > b.getX() &&
+                a.getY() < b.getY() + b.getColliderHeight() &&
+                a.getY() + a.getColliderHeight() > b.getY();
     }
 }

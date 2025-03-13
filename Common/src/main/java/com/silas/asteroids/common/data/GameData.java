@@ -4,13 +4,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class GameData {
-    boolean isTesting = true;
+    boolean isTesting;
     double mouseX;
     double mouseY;
     boolean mousePressed;
     Set<String> keySet = new HashSet<>();
     int frame = 0;
+    int animationSpeed = 14;
     int timeStart = (int) Math.floor(System.currentTimeMillis() / 1000.);
+
+    public GameData(boolean isTesting) {this.isTesting = isTesting;}
 
     public double getMousePosX() {return this.mouseX;}
     public double getMousePosY() {return this.mouseY;}
@@ -26,5 +29,5 @@ public class GameData {
     public boolean isKeyPressed(String key) {return keySet.contains(key);}
     public int getTimePlayed() {return (int) Math.floor(System.currentTimeMillis()/1000. - timeStart);}
     public boolean isTesting() {return isTesting;}
-
+    public boolean isAnimationFrame() {return frame % animationSpeed == 0;}
 }

@@ -1,7 +1,8 @@
 package com.silas.asteroids.common.entity;
 
 public enum EntityType {
-    BULLET,
+    PLAYERBULLET,
+    ENEMYBULLET,
     ASTEROID,
     ENEMY,
     PLAYER,

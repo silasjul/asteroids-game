@@ -1,22 +1,18 @@
 package com.silas.asteroids.bullet;
 
 import com.silas.asteroids.common.data.GameData;
-import com.silas.asteroids.common.entity.Entity;
 import com.silas.asteroids.common.data.World;
+import com.silas.asteroids.common.entity.Entity;
 import com.silas.asteroids.common.entity.EntityType;
 import com.silas.asteroids.sprite.Sprite;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-public class Bullet implements Entity
+public class Bullet extends Entity
 {
-    double x;
-    double y;
     double speed;
     double angleRad;
     Sprite sprite;
-    int width = 32;
-    int height = 32;
 
     public enum Type {
         ZAP,
@@ -25,19 +21,18 @@ public class Bullet implements Entity
         BALL
     }
 
-    public Bullet(double x, double y, double speed, double angleRad, Type type, EntityType firedBy) {
-        this.x = x;
-        this.y = y;
+    public Bullet(double x, double y, double speed, double angleRad, Type type, EntityType entityType) {
+        super(x, y, 32,32, 20, 20, entityType);
         this.speed = speed;
         this.angleRad = angleRad;
 
         // Different bullets
         double imgRotation = angleRad + Math.PI/2;
         switch (type) {
-            case ZAP -> this.sprite = new Sprite ("/player/projectiles/zap.png", height, width, 1, imgRotation);
-            case BULLET -> this.sprite = new Sprite ("/player/projectiles/bullet.png", height, width, 1.5, imgRotation);
-            case ROCKET -> this.sprite = new Sprite ("/player/projectiles/rocket.png", height, width, 1, imgRotation);
-            case BALL -> new Sprite ("/player/projectiles/ball.png", height, width, 1, imgRotation);
+            case ZAP -> this.sprite = new Sprite ("/player/projectiles/zap.png", width, height, 1, imgRotation);
+            case BULLET -> this.sprite = new Sprite ("/player/projectiles/bullet.png", width, height, 1.5, imgRotation);
+            case ROCKET -> this.sprite = new Sprite ("/player/projectiles/rocket.png", width, height, 1, imgRotation);
+            case BALL -> new Sprite ("/player/projectiles/ball.png", width, height, 1, imgRotation);
         }
     }
 
@@ -50,7 +45,9 @@ public class Bullet implements Entity
     public void draw(GraphicsContext gc, GameData gameData) {
         Image img = sprite.getCurrentImage();
         gc.drawImage(img, x - img.getWidth()/2, y - img.getHeight()/2);
-        if (gameData.getFrame() % 14 == 0) sprite.next();
+        if (gameData.isAnimationFrame()) sprite.next();
+
+        if (gameData.isTesting()) drawCenterCollider(gc);
     }
 
     @Override
@@ -62,12 +59,8 @@ public class Bullet implements Entity
         move();
     }
 
-    @Override
-    public EntityType getType() {
-        return EntityType.BULLET;
-    }
-
     public boolean isOutOfScreen(int screenWidth, int screenHeight) {
-        return this.x < 0 || this.x > screenWidth || this.y < 0 || this.y > screenHeight;
+        int max = 50; // Max distance allowed for a bullet to be out of canvas
+        return this.x < -max || this.x > screenWidth + max || this.y < -max || this.y > screenHeight + max;
     }
 }
