@@ -37,15 +37,15 @@ public class Sprite {
             throw new RuntimeException("image is null");
         }
 
-        createSubImages();
+        this.amount = spriteSheet.getWidth() / width;
     }
 
     public Sprite(String imagePath, int width, int height, double scale) {
         this(imagePath, width, height, scale, 0);
+        createSubImages();
     }
 
     public void createSubImages() {
-        this.amount = spriteSheet.getWidth() / width;
         fxSprites = new Image[amount];
         sprites = new BufferedImage[amount];
 
@@ -61,6 +61,13 @@ public class Sprite {
 
             fxSprites[i] = SwingFXUtils.toFXImage(newImage, null); // Converts BufferedImage to a JavaFX Image
         }
+    }
+
+    public Image getSubImages(int i) {
+            BufferedImage newImage = spriteSheet.getSubimage(i*width, 0, width, height);
+            newImage = scaleImage(newImage, this.scale);
+            newImage = rotateImage(newImage, rotationRad);
+            return SwingFXUtils.toFXImage(newImage, null);
     }
 
     public Image getImage(int i) {
@@ -106,7 +113,8 @@ public class Sprite {
 
     public int getWidth() {return width;}
     public int getHeight() {return height;}
-    public int getAmount()  {return this.fxSprites.length;}
+    public int getAmount()  {return this.amount;}
+    public int getCurrent() {return this.current;}
 
     public void next() {
         current++;

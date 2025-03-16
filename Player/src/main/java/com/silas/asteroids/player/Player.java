@@ -7,15 +7,20 @@ import com.silas.asteroids.common.entity.Character;
 import com.silas.asteroids.common.entity.EntityType;
 import com.silas.asteroids.player.engines.Engine;
 import com.silas.asteroids.player.engines.EngineManager;
+import com.silas.asteroids.player.weapons.Weapon;
+import com.silas.asteroids.player.weapons.WeaponManager;
 import com.silas.asteroids.sprite.Sprite;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Player extends Character {
     private int xp = 0;
     private final EngineManager engineManager;
+    private WeaponManager weaponManager;
+    private Weapon weapon;
     private Engine engine;
     private boolean isMoving = false;
 
@@ -46,6 +51,11 @@ public class Player extends Character {
         // Engine
         this.engineManager = new EngineManager();
         this.engine = engineManager.getEngine(EngineManager.EngineType.CHARGED);
+
+        Map<Integer, Weapon.FirePos> firePosMap = new HashMap<>();
+        firePosMap.put(2, Weapon.FirePos.LEFT);
+        firePosMap.put(3, Weapon.FirePos.RIGHT);
+        this.weapon = new Weapon(firePosMap, "/player/weapons/gun/cannon.png", scale);
     }
 
     @Override
@@ -63,7 +73,7 @@ public class Player extends Character {
 
     @Override
     protected void fire(World world, GameData gameData) {
-        Bullet bullet = new Bullet(this.x, this.y, this.bulletSpeed, this.angle, Bullet.Type.BULLET, EntityType.PLAYERBULLET);
+        Bullet bullet = new Bullet(this.x, this.y, this.bulletSpeed, this.angle, Bullet.Type.BULLET, EntityType.PLAYERBULLET, this.scale);
         world.addEntity(bullet);
         lastFire = System.currentTimeMillis();
     }
@@ -77,7 +87,7 @@ public class Player extends Character {
         else c = Condition.SHIT;
 
         Sprite sprite = new Sprite (this.shipMap.get(c), this.width, this.height, this.scale, getImageRotation());
-        return sprite.getImage(0);
+        return sprite.getSubImages(0);
     }
 
     @Override
@@ -101,19 +111,32 @@ public class Player extends Character {
     public void draw(GraphicsContext gc, GameData gameData) {
         if (isDead) return;
 
+        double rotation = this.getImageRotation();
+
         // draw engine flame
-        Sprite flame = isMoving ? engine.getPowering(this.scale, getImageRotation()) : engine.getIdle(this.scale, getImageRotation());
-        width = flame.getWidth();
-        height = flame.getHeight();
+        Sprite flame = isMoving ? engine.getPowering(this.scale, rotation) : engine.getIdle(this.scale, rotation);
+        int width = flame.getWidth();
+        int height = flame.getHeight();
         double[] flamePos = getCenterImagePos(width, height);
-        gc.drawImage(flame.getImage(engine.getCurrent(gameData)), flamePos[0], flamePos[1], width*this.scale, height*this.scale);
+        Image flameImage = flame.getSubImages(engine.getCurrent(gameData));
+        gc.drawImage(flameImage, flamePos[0], flamePos[1], width*this.scale, height*this.scale);
 
         // draw engine
-        Sprite base = engine.getBase(this.scale, getImageRotation());
-        int width = base.getWidth();
-        int height = base.getHeight();
+        Sprite base = engine.getBase(this.scale, rotation);
+        width = base.getWidth();
+        height = base.getHeight();
         double[] enginePos = getCenterImagePos(width, height);
-        gc.drawImage(base.getCurrentImage(), enginePos[0], enginePos[1], width*this.scale, height*this.scale);
+        Image engineImage = base.getSubImages(base.getCurrent());
+        gc.drawImage(engineImage, enginePos[0], enginePos[1], width*this.scale, height*this.scale);
+
+        // draw weapon
+        /*Sprite weaponSprite = this.weapon.getSprite(rotation);
+        width = weaponSprite.getWidth();
+        height = weaponSprite.getHeight();
+        double[] weaponPos = getCenterImagePos(width, height);
+        Image weaponImage = weaponSprite.getSubImages(this.weapon.getCurrent());
+        gc.drawImage(weaponImage, weaponPos[0], weaponPos[1], width*this.scale, height*this.scale);*/
+
 
         // draw ship
         double[] pos = getCenterImagePos(this.width, this.height);

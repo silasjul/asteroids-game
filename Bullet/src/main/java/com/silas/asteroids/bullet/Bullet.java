@@ -17,11 +17,10 @@ public class Bullet extends Entity
     public enum Type {
         ZAP,
         BULLET,
-        ROCKET,
         BALL
     }
 
-    public Bullet(double x, double y, double speed, double angleRad, Type type, EntityType entityType) {
+    public Bullet(double x, double y, double speed, double angleRad, Type type, EntityType entityType, double scale) {
         super(x, y, 32,32, 20, 20, entityType);
         this.speed = speed;
         this.angleRad = angleRad;
@@ -29,10 +28,9 @@ public class Bullet extends Entity
         // Different bullets
         double imgRotation = angleRad + Math.PI/2;
         switch (type) {
-            case ZAP -> this.sprite = new Sprite ("/player/projectiles/zap.png", width, height, 1, imgRotation);
-            case BULLET -> this.sprite = new Sprite ("/player/projectiles/bullet.png", width, height, 1.5, imgRotation);
-            case ROCKET -> this.sprite = new Sprite ("/player/projectiles/rocket.png", width, height, 1, imgRotation);
-            case BALL -> new Sprite ("/player/projectiles/ball.png", width, height, 1, imgRotation);
+            case ZAP -> this.sprite = new Sprite ("/player/projectiles/zap.png", width, height, scale, imgRotation);
+            case BULLET -> this.sprite = new Sprite ("/player/projectiles/bullet.png", width, height, scale, imgRotation);
+            case BALL -> this.sprite = new Sprite ("/player/projectiles/ball.png", width, height, scale, imgRotation);
         }
     }
 
@@ -43,7 +41,7 @@ public class Bullet extends Entity
 
     @Override
     public void draw(GraphicsContext gc, GameData gameData) {
-        Image img = sprite.getCurrentImage();
+        Image img = sprite.getSubImages(sprite.getCurrent());
         gc.drawImage(img, x - img.getWidth()/2, y - img.getHeight()/2);
         if (gameData.isAnimationFrame()) sprite.next();
 

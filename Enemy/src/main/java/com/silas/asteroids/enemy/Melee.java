@@ -24,8 +24,8 @@ public class Melee extends Character
         super(x, y,64, 64,45, 40, EntityType.ENEMY, 1.8,20,5, 1, 1, 0);
         this.player = player;
 
-        this.sprite = new Sprite("/melee/ships.png", width, height, scale, 0);
-        this.deathAnimation = new Sprite("/melee/death.png", width, height, scale, 0);
+        this.sprite = new Sprite("/melee/ships.png", width, height, scale);
+        this.deathAnimation = new Sprite("/melee/death.png", width, height, scale);
     }
 
     @Override

@@ -19,8 +19,7 @@
     <module>Sprite</module>
     <module>Bullet</module>
     <module>Common</module>
-      <module>Enemy</module>
-      <module>World</module>
+    <module>Enemy</module>
   </modules>
 
   <dependencies>
